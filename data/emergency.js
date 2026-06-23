@@ -1,23 +1,61 @@
-// data/emergency.js
-const EMERGENCY_DATA = {
-    title: "Emergency Response",
-    desc: "Tactical incident response and threat neutralization protocols.",
-    pages: {
-        "ransomware": { 
-            title: "RANSOMWARE_CONTAINMENT", 
-            content: "1. ISOLATE: Physically disconnect the network cable or disable WiFi immediately.\n2. PRESERVE: Do not reboot. Do not clear RAM.\n3. LOG: Document the time of infection and file extension changes.\n4. COMMAND: Alert incident lead for decryption attempt or offline restoration." 
-        },
-        "phishing": { 
-            title: "PHISHING_RESPONSE", 
-            content: "1. ANALYZE: Extract email headers and identify the originating SMTP server.\n2. ISOLATE: Prevent the user from clicking links or opening attachments.\n3. PURGE: Delete from the server-side to prevent lateral spread.\n4. ROTATE: Immediately force a credential reset for the affected user." 
-        },
-        "data_leak": { 
-            title: "UNAUTHORIZED_DATA_EXFIL", 
-            content: "1. TERMINATE: Kill the active socket/process immediately.\n2. LOG: Capture netstat logs to identify the destination IP.\n3. SECURE: Change API keys and service account passwords immediately.\n4. AUDIT: Review system access logs for the last 1 hour." 
-        },
-        "ddos": { 
-            title: "DDoS_MITIGATION", 
-            content: "1. IDENTIFY: Check traffic source via firewall logs.\n2. FILTER: Apply geo-blocking or rate-limiting rules.\n3. ROUTE: Redirect traffic through a scrubbing service if available.\n4. SCALE: Provision additional resources to handle the surge." 
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CD-OS // NAIROBI CENTRAL // COMMAND MATRIX</title>
+    <style>
+        :root { --bg: #020406; --cyan: #00f0ff; --red: #ff3e3e; --green: #3eff8b; --border: #161b22; --text: #e6edf3; }
+        * { box-sizing: border-box; }
+        body { background: var(--bg); color: var(--text); font-family: 'JetBrains Mono', 'Courier New', monospace; margin: 0; display: flex; height: 100vh; overflow: hidden; }
+        
+        #nav { width: 320px; border-right: 1px solid var(--border); background: rgba(0,0,0,0.85); display: flex; flex-direction: column; overflow-y: auto; }
+        #view { flex: 1; overflow-y: auto; padding: 40px; position: relative; background-image: linear-gradient(rgba(0, 240, 255, 0.03) 1px, transparent 1px); background-size: 100% 4px; }
+        
+        .header { padding: 25px; border-bottom: 1px solid var(--border); color: var(--cyan); font-size: 0.75rem; letter-spacing: 2px; }
+        .module { padding: 20px 25px; border-left: 2px solid transparent; cursor: pointer; border-bottom: 1px solid var(--border); transition: 0.2s; }
+        .module:hover { background: rgba(0, 240, 255, 0.05); border-left: 3px solid var(--cyan); }
+        
+        .loading-box { display: flex; flex-direction: column; align-items: center; justify-content: center; height: 60vh; }
+        .progress-container { width: 300px; height: 4px; background: var(--border); margin-top: 20px; }
+        .progress-bar { height: 100%; background: var(--cyan); width: 0%; transition: width 0.3s ease; }
+        .telemetry { font-size: 0.7rem; color: var(--green); margin-bottom: 10px; }
+        .card { border: 1px solid var(--border); padding: 20px; background: rgba(22, 27, 34, 0.4); margin-bottom: 15px; }
+        #status-bar { padding: 15px; font-size: 0.6rem; color: var(--cyan); border-top: 1px solid var(--border); }
+    </style>
+</head>
+<body>
+
+<aside id="nav">
+    <div class="header">SYSTEM_OPERATIONAL_MATRIX</div>
+    <div id="module-container"></div>
+    <div id="status-bar">SYSTEM_READY</div>
+    <div style="margin-top: auto; padding: 25px; font-size: 0.7rem; color: #444;">ID: NBI_CENTRAL_SECURE_LINK // ADMIN_LEVEL_01</div>
+</aside>
+
+<main id="view">
+    <div id="content-area">
+        <h1>SYSTEM STANDBY</h1>
+        <p>Awaiting data injection from operational modules.</p>
+    </div>
+</main>
+
+<script src="data/core.js"></script>
+<script src="data/emergency.js"></script>
+<script src="data/recovery.js"></script>
+
+<script src="app.js"></script>
+
+<script>
+    // System boot sequence
+    window.addEventListener('load', () => {
+        if (typeof initializeSystem === 'function') {
+            initializeSystem();
+        } else {
+            console.error("CRITICAL: Engine (app.js) not found or failed to load.");
         }
-    }
-};
+    });
+</script>
+
+</body>
+</html>
