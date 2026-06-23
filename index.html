@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CD-OS // NAIROBI CENTRAL // COMMAND MATRIX</title>
+    <style>
+        :root { --bg: #020406; --cyan: #00f0ff; --red: #ff3e3e; --green: #3eff8b; --border: #161b22; --text: #e6edf3; }
+        * { box-sizing: border-box; }
+        body { background: var(--bg); color: var(--text); font-family: 'JetBrains Mono', 'Courier New', monospace; margin: 0; display: flex; height: 100vh; overflow: hidden; }
+        
+        #nav { width: 320px; border-right: 1px solid var(--border); background: rgba(0,0,0,0.85); display: flex; flex-direction: column; overflow-y: auto; }
+        #view { flex: 1; overflow-y: auto; padding: 40px; position: relative; background-image: linear-gradient(rgba(0, 240, 255, 0.03) 1px, transparent 1px); background-size: 100% 4px; }
+        
+        .header { padding: 25px; border-bottom: 1px solid var(--border); color: var(--cyan); font-size: 0.75rem; letter-spacing: 2px; }
+        .module { padding: 20px 25px; border-left: 2px solid transparent; cursor: pointer; border-bottom: 1px solid var(--border); transition: 0.2s; }
+        .module:hover { background: rgba(0, 240, 255, 0.05); border-left: 3px solid var(--cyan); }
+        
+        /* Loading Styles */
+        .loading-box { display: flex; flex-direction: column; align-items: center; justify-content: center; height: 60vh; }
+        .progress-container { width: 300px; height: 4px; background: var(--border); margin-top: 20px; position: relative; }
+        .progress-bar { height: 100%; background: var(--cyan); width: 0%; box-shadow: 0 0 10px var(--cyan); transition: width 0.3s ease; }
+        .telemetry { font-size: 0.7rem; color: var(--green); margin-bottom: 10px; display: flex; align-items: center; }
+        
+        .card { border: 1px solid var(--border); padding: 20px; background: rgba(22, 27, 34, 0.4); margin-bottom: 15px; }
+    </style>
+</head>
+<body>
+
+<aside id="nav">
+    <div class="header">SYSTEM_OPERATIONAL_MATRIX</div>
+    <div id="module-container"></div>
+    <div style="margin-top: auto; padding: 25px; font-size: 0.7rem; color: #444;">ID: NBI_CENTRAL_SECURE_LINK // ADMIN_LEVEL_01</div>
+</aside>
+
+<main id="view">
+    <div id="content-area">
+        <h1>SYSTEM READY</h1>
+        <p>Awaiting operator intervention. Select a defensive module to initialize the triage tunnel.</p>
+    </div>
+</main>
+
+<script>
+/** 
+ * OPERATIONAL DATABASE (HARDENED)
+ */
+const GuardianDatabase = {
+    EMERGENCY: { 
+        title: "Emergency Response", 
+        desc: "Immediate containment protocols for active breaches.",
+        pages: { 
+            "ransomware": { title: "RANSOMWARE_CONTAINMENT", content: "1. SHUT DOWN NETWORK INTERFACE. 2. DO NOT REBOOT. 3. CALL INCIDENT COMMAND." },
+            "phishing": { title: "PHISHING_RESPONSE", content: "1. ISOLATE SOURCE. 2. CAPTURE HEADER METADATA. 3. ROTATE CREDENTIALS." }
+        }
+    },
+    RECOVERY: { 
+        title: "Recovery Ops", 
+        desc: "Forensic evidence preservation and restoration.",
+        pages: { 
+            "forensics": { title: "EVIDENCE_PRESERVATION", content: "Clone drive. Capture volatile logs. Verify hashes." }
+        }
+    }
+};
+
+// 1. Sidebar Init
+const nav = document.getElementById('module-container');
+nav.innerHTML = ''; // Clear prior artifacts
+Object.keys(GuardianDatabase).forEach(key => {
+    nav.innerHTML += `
+        <div class="module" onclick="executeModule('${key}')">
+            <div style="font-size: 0.6rem; color: var(--cyan);">// EXEC_MOD</div>
+            <div style="font-weight:bold;">${GuardianDatabase[key].title}</div>
+        </div>`;
+});
+
+// 2. Loading Engine (Diagnostic version)
+function showLoading(callback) {
+    console.log("INITIALIZING_TUNNEL...");
+    const content = document.getElementById('content-area');
+    content.innerHTML = `
+        <div class="loading-box">
+            <div class="telemetry">ESTABLISHING_SECURE_TUNNEL...</div>
+            <div class="progress-container"><div class="progress-bar" id="sys-bar"></div></div>
+            <div id="sys-status" style="margin-top:10px; font-size:0.7rem;">HANDSHAKE_INIT...</div>
+        </div>
+    `;
+    let progress = 0;
+    const interval = setInterval(() => {
+        progress += 25;
+        document.getElementById('sys-bar').style.width = progress + "%";
+        if(progress >= 100) { clearInterval(interval); callback(); }
+    }, 200);
+}
+
+// 3. Execution (Hardened)
+window.executeModule = function(modKey) {
+    if(!GuardianDatabase[modKey]) {
+        console.error("CRITICAL_ERROR: Module missing in DB: " + modKey);
+        return;
+    }
+    showLoading(() => {
+        const data = GuardianDatabase[modKey];
+        const content = document.getElementById('content-area');
+        content.innerHTML = `<h1>${data.title}</h1><p>${data.desc}</p><div id="protocol-list"></div>`;
+        
+        Object.keys(data.pages).forEach(pKey => {
+            document.getElementById('protocol-list').innerHTML += `
+                <div class="card" onclick="renderPage('${modKey}', '${pKey}')" style="cursor:pointer; border-left:3px solid var(--cyan);">
+                    <strong>${data.pages[pKey].title}</strong>
+                </div>`;
+        });
+    });
+};
+
+function renderPage(mod, page) {
+    const p = GuardianDatabase[mod].pages[page];
+    document.getElementById('content-area').innerHTML = `
+        <h1 style="color:var(--cyan);">${p.title}</h1>
+        <div class="card">${p.content}</div>
+        <button onclick="executeModule('${mod}')" style="cursor:pointer;">RETURN_TO_MODULE</button>
+    `;
+    // Add this inside your render engine to show system status
+const status = document.getElementById('status-bar'); 
+status.innerHTML = `SYSTEM: ${CORE_DATA.metadata.system_name} | THREAT_LEVEL: ${CORE_DATA.defense_posture.threat_level}`;
+}
+</script>
+</body>
+</html>
